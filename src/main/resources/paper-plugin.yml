@@ -1,0 +1,8 @@
+name: THUtils
+version: '0.0.1'
+main: de.thzockt.thUtils.Main
+api-version: '1.21'
+load: STARTUP
+authors: [ THZockt ]
+description: Ist das offizielle THUtils Plugin von THZockt!
+website: https://youtube.com/@thzockt
