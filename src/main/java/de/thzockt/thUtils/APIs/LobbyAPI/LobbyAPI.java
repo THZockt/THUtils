@@ -1,6 +1,7 @@
 package de.thzockt.thUtils.APIs.LobbyAPI;
 
 import de.thzockt.thUtils.APIs.InstanceAPI.InstanceAPI;
+import de.thzockt.thUtils.APIs.InstanceAPI.InstancePlayerData;
 import de.thzockt.thUtils.APIs.ServerManagerAPI.ServerManagerAPI;
 import de.thzockt.thUtils.APIs.ServerManagerAPI.ServerMode;
 import org.bukkit.*;
@@ -47,6 +48,7 @@ public class LobbyAPI {
             PotionEffectType type = effect.getType();
             player.removePotionEffect(type);
         }
+        InstancePlayerData.revokeAllAdvancements(player);
     }
 
     private static void pasteLobbyStructure() {

@@ -40,6 +40,29 @@ public class MessagesEnglish {
         MessageAPI.iniAddMessage(MessageID.COMMAND_SERVERMODE_ALREADY_MODE, language, "§cThis mode is already selected on this server!");
         MessageAPI.iniAddMessage(MessageID.COMMAND_SERVERMODE_REQUIRED_RESTART, language, "§aYou have successfully changed the servermode to §f\"{0}\"§a! To fully adapt this change, you have to restart the server!");
         MessageAPI.iniAddMessage(MessageID.COMMAND_INSTANCE_JOIN_FAIL, language, "§cThe instance §6\"{0}\"§c is currently not online!");
+        MessageAPI.iniAddMessage(MessageID.STYLES_DAYS, language, "Days");
+        MessageAPI.iniAddMessage(MessageID.STYLES_DAY, language, "Day");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_ALREADY_RESUMED, language, "§cThe timer is already resumed!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_ALREADY_PAUSED, language, "§cThe timer is already paused!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_RESUMED, language, "§aYou have successfully resumed the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_PAUSED, language, "§aYou have successfully paused the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_TOGGLED, language, "§aYou have successfully toggled the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_RESET, language, "§aYou have successfully reset the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_SET, language, "§aYou have successfully set the timer to §f{0}§a!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_ADD, language, "§aYou have successfully added §f{0}§a to the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_ONLY_SET_OR_ADD, language, "§cYou can only type \"set\" or \"add\"!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_IS_REVERSE, language, "§cThe timer is already in this direction!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_REVERSE, language, "§aYou have successfully changed the direction of the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_IS_BOLD, language, "§cThe timer is already in this font!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_BOLD, language, "§aYou have successfully changed the font type of the timer!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_IS_STYLE, language, "§cThis timer style is already selected!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_SUCCESSFULLY_STYLE, language, "§aYou have successfully changed the timer style!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_NOT_IN_LOBBY, language, "§cYou cannot run this command in the lobby!");
+        MessageAPI.iniAddMessage(MessageID.TIMER_PAUSED, language, "§7The timer is paused!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_COLOR_SOLID, language, "§aYou have successfully changed the timer to a solid color!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_COLOR_SOLID_CUSTOM, language, "§aYou have successfully changed the timer to a custom solid color!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_COLOR_RGB_FADE, language, "§aYou have successfully changed the timer to an RGB fade!");
+        MessageAPI.iniAddMessage(MessageID.COMMAND_TIMER_COLOR_RGB_TRANSITION, language, "§aYou have successfully changed the timer to an RGB transition!");
     }
 
 }

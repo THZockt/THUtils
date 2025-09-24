@@ -28,9 +28,9 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
 
+        scheduler = this.getServer().getScheduler();
         // initialising all plugin stuff
         InitialiseAPI.initialisePlugin();
-        scheduler = this.getServer().getScheduler();
     }
 
     @Override

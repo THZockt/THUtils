@@ -6,10 +6,8 @@ import de.thzockt.thUtils.APIs.LobbyAPI.LobbyAPI;
 import de.thzockt.thUtils.APIs.MessageAPI.MessageAPI;
 import de.thzockt.thUtils.APIs.PortalAPI.PortalAPI;
 import de.thzockt.thUtils.APIs.ServerManagerAPI.ServerManagerAPI;
-import de.thzockt.thUtils.Commands.CommandInstance;
-import de.thzockt.thUtils.Commands.CommandLanguage;
-import de.thzockt.thUtils.Commands.CommandLobby;
-import de.thzockt.thUtils.Commands.CommandServermode;
+import de.thzockt.thUtils.APIs.TimerAPI.TimerCore;
+import de.thzockt.thUtils.Commands.*;
 import de.thzockt.thUtils.Main;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
@@ -30,6 +28,7 @@ public class InitialiseAPI {
         // Initialising Plugin stuff on the onLoad Method from the Main class
         initialiseAPIs();
         initialiseCommands();
+        initialiseTimer();
     }
 
 
@@ -45,6 +44,8 @@ public class InitialiseAPI {
             commands.registrar().register(CommandLobby.root.build(), List.of("lobby", "hub", "l"));
             commands.registrar().register(CommandLanguage.root.build());
             commands.registrar().register(CommandServermode.root.build());
+            commands.registrar().register(CommandTest.root.build());
+            commands.registrar().register(CommandTimer.root.build());
         });
     }
 
@@ -72,6 +73,10 @@ public class InitialiseAPI {
     private static void loadServerManagerAPI() {
         // Loading the ServerManagerAPI's Config Data
         ServerManagerAPI.loadDataFromConfig();
+    }
+
+    private static void initialiseTimer() {
+        TimerCore.run();
     }
 
 }

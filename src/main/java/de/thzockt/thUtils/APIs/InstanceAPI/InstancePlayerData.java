@@ -3,21 +3,18 @@ package de.thzockt.thUtils.APIs.InstanceAPI;
 import de.thzockt.thUtils.APIs.ConfigAPI.Config;
 import de.thzockt.thUtils.APIs.PortalAPI.PortalAPI;
 import de.thzockt.thUtils.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class InstancePlayerData {
 
@@ -100,6 +97,32 @@ public class InstancePlayerData {
             playerData.save();
         }
         return playerData.toFileConfiguration().getBoolean("gliding");
+    }
+
+    public static void getAndSetPlayerAdvancements(UUID instanceUUID, UUID playerUUID) {
+        Config playerData = new Config(playerUUID.toString() + ".yml", new File(Main.getInstance().getDataFolder() + "/instanceData/" + instanceUUID + "/playerData/"));
+
+        Player player = Bukkit.getPlayer(playerUUID);
+        if (player == null)
+            return;
+
+        if (!playerData.toFileConfiguration().contains("advancements"))
+            return;
+
+        revokeAllAdvancements(player);
+
+        //InstancePlayerAdvancementAPI.addToQueue(player, instanceUUID);
+
+        for (@NotNull Iterator<Advancement> it = player.getServer().advancementIterator(); it.hasNext(); ) {
+            Advancement advancement = it.next();
+            String key = advancement.getKey().toString();
+            if (playerData.toFileConfiguration().contains("advancements." + key)) {
+                List<String> criteriaList = playerData.toFileConfiguration().getStringList("advancements." + key);
+                for (String criteria : criteriaList) {
+                    player.getAdvancementProgress(advancement).awardCriteria(criteria);
+                }
+            }
+        }
     }
 
     public static void getAndSetPlayerEffects(UUID instanceUUID, UUID playerUUID) {
@@ -280,6 +303,27 @@ public class InstancePlayerData {
         playerData.save();
     }
 
+    public static void savePlayerAdvancements(UUID instanceUUID, UUID playerUUID) {
+        Config playerData = new Config(playerUUID.toString() + ".yml", new File(Main.getInstance().getDataFolder() + "/instanceData/" + instanceUUID + "/playerData/"));
+
+        Player player = Bukkit.getPlayer(playerUUID);
+        if (player == null)
+            return;
+
+        for (@NotNull Iterator<Advancement> it = player.getServer().advancementIterator(); it.hasNext(); ) {
+            Advancement advancement = it.next();
+            String key = advancement.getKey().toString();
+
+            Collection<String> awarded = player.getAdvancementProgress(advancement).getAwardedCriteria();
+            List<String> awardedList = new ArrayList<>(awarded);
+
+            if (!awarded.isEmpty()) {
+                playerData.toFileConfiguration().set("advancements." + key, awardedList);
+            }
+        }
+        playerData.save();
+    }
+
     public static void savePlayerEffects(UUID instanceUUID, UUID playerUUID) {
         Config playerData = new Config(playerUUID.toString() + ".yml", new File(Main.getInstance().getDataFolder() + "/instanceData/" + instanceUUID + "/playerData/"));
 
@@ -342,6 +386,20 @@ public class InstancePlayerData {
             playerData.toFileConfiguration().set("inventory.slot_" + i, player.getInventory().getItem(i));
         }
         playerData.save();
+    }
+
+    public static void revokeAllAdvancements(Player player) {
+        for (@NotNull Iterator<Advancement> it = player.getServer().advancementIterator(); it.hasNext(); ) {
+            Advancement advancement = it.next();
+            Collection<String> awarded = player.getAdvancementProgress(advancement).getAwardedCriteria();
+            Collection<String> remaining = player.getAdvancementProgress(advancement).getRemainingCriteria();
+            List<String> all = new ArrayList<>();
+            all.addAll(awarded);
+            all.addAll(remaining);
+            for (String criteria : all) {
+                player.getAdvancementProgress(advancement).revokeCriteria(criteria);
+            }
+        }
     }
 
 }

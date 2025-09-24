@@ -23,13 +23,13 @@ import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class InstanceAPI implements Listener {
 
     public static HashMap<String, String> playerInstancePositions = new HashMap<>();
+    private static List<UUID> activeInstances = new ArrayList<>();
+    private static HashMap<World, Boolean> announcements = new HashMap<>();
 
     public static void checkPlayerPostion(Player player) {
         if (!playerInstancePositions.containsKey(player.getUniqueId().toString())) {
@@ -122,6 +122,7 @@ public class InstanceAPI implements Listener {
         if (!InstanceUUID.exists(instanceUUID))
             return;
 
+        activeInstances.add(instanceUUID);
         loadWorlds(instanceUUID);
     }
 
@@ -149,6 +150,7 @@ public class InstanceAPI implements Listener {
             }
         }
 
+        activeInstances.remove(instanceUUID);
         Bukkit.unloadWorld(world, true);
         Bukkit.unloadWorld(nether, true);
         Bukkit.unloadWorld(the_end, true);
@@ -196,6 +198,8 @@ public class InstanceAPI implements Listener {
 
         playerInstancePositions.put(player.getUniqueId().toString(), instanceUUID.toString());
 
+        mute();
+
         Location tpLocation = world.getSpawnLocation();
         player.teleport(tpLocation);
 
@@ -204,7 +208,11 @@ public class InstanceAPI implements Listener {
             player.removePotionEffect(type);
         }
 
+        InstancePlayerData.revokeAllAdvancements(player);
+
         loadPlayerData(UUID.fromString(playerInstancePositions.get(player.getUniqueId().toString())), player);
+
+        unmute();
     }
 
     private static void loadWorlds(UUID instanceUUID) {
@@ -224,6 +232,10 @@ public class InstanceAPI implements Listener {
         instanceCreatorEnd.createWorld();
     }
 
+    public static List<UUID> getActiveInstances() {
+        return activeInstances;
+    }
+
     // ----------[ PlayerData Management ]----------
 
     public static void loadPlayerData(UUID instanceUUID, Player player) {
@@ -232,6 +244,7 @@ public class InstanceAPI implements Listener {
         player.setHealth(InstancePlayerData.getPlayerHealth(instanceUUID, playerUUID));
         player.setFoodLevel(InstancePlayerData.getPlayerFood(instanceUUID, playerUUID));
         player.setSaturation(InstancePlayerData.getPlayerSaturation(instanceUUID, playerUUID));
+        InstancePlayerData.getAndSetPlayerAdvancements(instanceUUID, playerUUID);
         player.setLevel(InstancePlayerData.getPlayerLevel(instanceUUID, playerUUID));
         player.setExp(InstancePlayerData.getPlayerLevelProgress(instanceUUID, playerUUID));
         player.setGameMode(InstancePlayerData.getPlayerGamemode(instanceUUID, playerUUID));
@@ -251,6 +264,7 @@ public class InstanceAPI implements Listener {
         InstancePlayerData.savePlayerHealth(instanceUUID, playerUUID);
         InstancePlayerData.savePlayerFood(instanceUUID, playerUUID);
         InstancePlayerData.savePlayerSaturation(instanceUUID, playerUUID);
+        InstancePlayerData.savePlayerAdvancements(instanceUUID, playerUUID);
         InstancePlayerData.savePlayerLevel(instanceUUID, playerUUID);
         InstancePlayerData.savePlayerLevelProgress(instanceUUID, playerUUID);
         InstancePlayerData.savePlayerGamemode(instanceUUID, playerUUID);
@@ -295,6 +309,19 @@ public class InstanceAPI implements Listener {
             if (playerInstancePositions.get(player.getUniqueId().toString()).equals(instanceUUID.toString())) {
                 savePlayerData(instanceUUID, player);
             }
+        }
+    }
+
+    private static void mute() {
+        for (World world : Bukkit.getWorlds()) {
+            announcements.put(world, world.getGameRuleValue(GameRule.ANNOUNCE_ADVANCEMENTS));
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        }
+    }
+
+    private static void unmute() {
+        for (World world : Bukkit.getWorlds()) {
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, announcements.get(world));
         }
     }
 
